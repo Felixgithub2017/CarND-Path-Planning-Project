@@ -29,13 +29,12 @@ The inspiration of my path generation code comes from the project code walk thro
 
 Two vectors are defined as ptsx and ptsy to store the path points.
 
-vector<double> ptsx;
-vector<double> ptsy;
-
 First, I obtain the main car's (x,y) coordinate and yaw;
 
 double ref_x = car_x;
+
 double ref_y = car_y;
+
 double ref_yaw = deg2rad(car_yaw);
 
 Then, I check if there are any previous points for the previous path.
@@ -74,15 +73,21 @@ Next, I need to set three future points and add them to vector ptsx and ptsy.
 These points are 30 meters apart, more points will be filled in afterwards.
 
 vector<double> next_wp0 = getXY(car_s + 30, 2 + 4*lane, map_waypoints_s, map_waypoints_x, map_waypoints_y);
+
 vector<double> next_wp1 = getXY(car_s + 60, 2 + 4*lane, map_waypoints_s, map_waypoints_x, map_waypoints_y);
+
 vector<double> next_wp2 = getXY(car_s + 90, 2 + 4*lane, map_waypoints_s, map_waypoints_x, map_waypoints_y);
 
 ptsx.push_back(next_wp0[0]);
+
 ptsx.push_back(next_wp1[0]);
+
 ptsx.push_back(next_wp2[0]);
 
 ptsy.push_back(next_wp0[1]);
+
 ptsy.push_back(next_wp1[1]);
+
 ptsy.push_back(next_wp2[1]);
 
 Next, coordinates in vector ptsx and ptsy need to be transformed to local car coordinates. Use a for loop to transform all the points in vector ptsx and ptsy.
@@ -101,12 +106,15 @@ It is a single header file, and it is very easy to use.
 As I have a set of x coordinates(ptsx) and a set of y coordinates(ptsy), I am able to use spline to fit a curve(a function that returns y for each x on the curve) that runs through all the points.
 
 tk::spline s;
+
 s.set_points(ptsx, ptsy);
 
 Finally, I calculate the (x,y) coordinates for all the points of the path, and then transform them back to global coordinates, and finally add them to vector next_x_vals and next_y_vals.
 
 double target_x = 30.0;
+
 double target_y = s(target_x);
+
 double target_dist = sqrt(target_x*target_x + target_y*target_y);
 
 double x_add_on = 0;
@@ -134,6 +142,9 @@ for(int i = 1; i < 50 - prev_size; i++)
 }
 
 Finally, next_x_vals and next_y_vals can be transmitted to the simulator.
+
+
+
 --------------------------------------------------------------------------------------
 
 # The following is original Udacity README
